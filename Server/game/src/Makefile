@@ -47,6 +47,7 @@ LIBS += -lthecore -llua -llualib -lsql -lgame
 LIBS += ../../libpoly/libpoly.a
 
 TARGET  = $(BINDIR)/game_r$(P4_VERSION)_$(PLATFORM)
+OUTPUT = /home/metin2/share/game
 
 CFILE	= minilzo.c
 
@@ -114,5 +115,8 @@ tag:
 
 dep:
 	makedepend -f Depend $(INCDIR) -p$(OBJDIR)/ $(CPPFILE) $(CFILE) $(MAINCPP) 2> /dev/null > Depend
+	
+install:
+	@cp $(TARGET) $(OUTPUT)
 
 sinclude Depend

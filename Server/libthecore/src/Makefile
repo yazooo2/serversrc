@@ -1,15 +1,9 @@
-CC	= g++8
+CC	= c++
 BIN_DIR = ../lib
 BIN     = $(BIN_DIR)/libthecore.a
 INCLUDE = ../include
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
-
-ifeq ($(GCC_VERSION), 4)
 CFLAGS  = -Wall -O2 -pipe -g -I$(INCLUDE)
-else
-CFLAGS  = -Wall -O2 -pipe -g -I$(INCLUDE)
-endif
 
 LIBS    = 
 

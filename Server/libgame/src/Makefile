@@ -1,14 +1,8 @@
-CXX	= g++8
+CXX	= clang
 BIN_DIR = ../lib
 BIN = $(BIN_DIR)/libgame.a
 
-GCC_VERSION = $(shell $(CC) --version 2>&1 | grep "(GCC)" | cut -d' ' -f3  | cut -d'.' -f1)
-
-ifeq ($(GCC_VERSION), 4)
 CFLAGS = -Wall -O2 -pipe -fno-exceptions -I../include
-else
-CFLAGS = -Wall -O2 -pipe -fno-exceptions -I../include
-endif
 
 LIBS =
 

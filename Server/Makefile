@@ -1,19 +1,13 @@
-CC=gcc
-CXX=g++
+CC=clang
+CXX=c++
 
 PLATFORM = $(shell file /bin/ls | cut -d' ' -f3 | cut -d'-' -f1)
 BSD_VERSION = $(shell uname -v 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
 
-default: libthecore libpoly libgame liblua libsql game db
+default: libthecore libpoly libgame liblua libsql
 	@echo "--------------------------------------"
 	@echo "Build Done"
 	@echo "--------------------------------------"
-
-libserverkey: .
-	@touch $@/Depend
-	$(MAKE) -C $@ dep
-	$(MAKE) -C $@ clean
-	$(MAKE) -C $@
 
 liblua: .
 	$(MAKE) -C $@ clean
