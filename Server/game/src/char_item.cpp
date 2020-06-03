@@ -3805,6 +3805,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetInventoryItem(wDestCell)))
 										return false;
+									
+									if (ITEM_COSTUME == item2->GetType())
+									{
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("속성을 변경할 수 없는 아이템입니다."));
+										return false;
+									}
 
 									if (item2->IsExchanging() == true)
 										return false;
@@ -3848,6 +3854,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetItem(DestCell)))
 										return false;
+
+									if (ITEM_COSTUME == item2->GetType())
+									{
+										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("속성을 변경할 수 없는 아이템입니다."));
+										return false;
+									}
 
 									if (item2->IsExchanging() == true)
 										return false;
