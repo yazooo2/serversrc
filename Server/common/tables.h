@@ -401,8 +401,8 @@ typedef struct SPlayerTable
 	int	lExitX, lExitY;
 	int	lExitMapIndex;
 
-	short       hp;
-	short       sp;
+	int       hp;
+	int       sp;
 
 	short	sRandomHP;
 	short	sRandomSP;
