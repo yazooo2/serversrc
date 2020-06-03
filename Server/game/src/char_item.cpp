@@ -3806,6 +3806,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetInventoryItem(wDestCell)))
 										return false;
 									
+									if (item2->IsEquipped())
+									{
+										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+										return false;
+									}
+									
 									if (ITEM_COSTUME == item2->GetType())
 									{
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("¼Ó¼ºÀ» º¯°æÇÒ ¼ö ¾ø´Â ¾ÆÀÌÅÛÀÔ´Ï´Ù."));
@@ -3854,6 +3860,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetItem(DestCell)))
 										return false;
+									
+									if (item2->IsEquipped())
+									{
+										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+										return false;
+									}
 
 									if (ITEM_COSTUME == item2->GetType())
 									{
@@ -4452,7 +4464,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (item2->IsEquipped())
 							{
-								BuffOnAttr_RemoveBuffsFromItem(item2);
+								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+								return false;
 							}
 
 							// [NOTE] ÄÚ½ºÆ¬ ¾ÆÀÌÅÛ¿¡´Â ¾ÆÀÌÅÛ ÃÖÃÊ »ý¼º½Ã ·£´ý ¼Ó¼ºÀ» ºÎ¿©ÇÏµÇ, Àç°æÀç°¡ µîµîÀº ¸·¾Æ´Þ¶ó´Â ¿äÃ»ÀÌ ÀÖ¾úÀ½.
@@ -4784,10 +4797,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("ÀÌ ¾ÆÀÌÅÛÀ» ÀåÂøÇÒ ¼ö ¾ø½À´Ï´Ù."));
 									}
 									break;
-							}
-							if (item2->IsEquipped())
-							{
-								BuffOnAttr_AddBuffsFromItem(item2);
 							}
 						}
 						break;
