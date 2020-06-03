@@ -219,14 +219,18 @@ void MessengerManager::__RemoveFromList(MessengerManager::keyA account, Messenge
 
 void MessengerManager::RemoveFromList(MessengerManager::keyA account, MessengerManager::keyA companion)
 {
-	if (companion.size() == 0)
-		return;
+    if (companion.empty())
+        return;
 
-	sys_log(1, "Messenger Remove %s %s", account.c_str(), companion.c_str());
-	DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' AND companion = '%s'",
-			get_table_postfix(), account.c_str(), companion.c_str());
+    char companionEscaped[CHARACTER_NAME_MAX_LEN * 2 + 1];
+    DBManager::instance().EscapeString(companionEscaped, sizeof(companionEscaped), companion.c_str(), companion.length());
 
-	__RemoveFromList(account, companion);
+    DBManager::instance().Query("DELETE FROM messenger_list%s WHERE account='%s' AND companion = '%s'",
+                                get_table_postfix(), account.c_str(), companionEscaped);
+
+    __RemoveFromList(account, companion);
+
+    sys_log(1, "Messenger Remove %s %s", account.c_str(), companion.c_str());
 
 	TPacketGGMessenger p2ppck;
 
