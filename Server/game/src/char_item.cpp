@@ -3806,10 +3806,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							case 71051 : // 진재가
 								{
-									// 유럽, 싱가폴, 베트남 진재가 사용금지
-									if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
-										return false;
-
 									LPITEM item2;
 
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetInventoryItem(wDestCell)))
@@ -3853,10 +3849,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							case 71052 : // 진재경
 								{
-									// 유럽, 싱가폴, 베트남 진재가 사용금지
-									if (LC_IsEurope() || LC_IsSingapore() || LC_IsVietnam())
-										return false;
-
 									LPITEM item2;
 
 									if (!IsValidItemPosition(DestCell) || !(item2 = GetItem(DestCell)))
