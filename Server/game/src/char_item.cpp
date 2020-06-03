@@ -47,11 +47,6 @@
 
 const int ITEM_BROKEN_METIN_VNUM = 28960;
 
-// CHANGE_ITEM_ATTRIBUTES
-const DWORD CHARACTER::msc_dwDefaultChangeItemAttrCycle = 10;
-const char CHARACTER::msc_szLastChangeItemAttrFlag[] = "Item.LastChangeItemAttr";
-const char CHARACTER::msc_szChangeItemAttrCycleFlag[] = "change_itemattr_cycle";
-// END_OF_CHANGE_ITEM_ATTRIBUTES
 const BYTE g_aBuffOnAttrPoints[] = { POINT_ENERGY, POINT_COSTUME_ATTR_BONUS };
 
 struct FFindStone
@@ -4513,36 +4508,6 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("변경할 속성이 없습니다."));
 										return false;
-									}
-
-									if (GM_PLAYER == GetGMLevel() && false == test_server)
-									{
-										//
-										// Event Flag 를 통해 이전에 아이템 속성 변경을 한 시간으로 부터 충분한 시간이 흘렀는지 검사하고
-										// 시간이 충분히 흘렀다면 현재 속성변경에 대한 시간을 설정해 준다.
-										//
-
-										DWORD dwChangeItemAttrCycle = quest::CQuestManager::instance().GetEventFlag(msc_szChangeItemAttrCycleFlag);
-										if (dwChangeItemAttrCycle < msc_dwDefaultChangeItemAttrCycle)
-											dwChangeItemAttrCycle = msc_dwDefaultChangeItemAttrCycle;
-
-										quest::PC* pPC = quest::CQuestManager::instance().GetPC(GetPlayerID());
-
-										if (pPC)
-										{
-											DWORD dwNowMin = get_global_time() / 60;
-
-											DWORD dwLastChangeItemAttrMin = pPC->GetFlag(msc_szLastChangeItemAttrFlag);
-
-											if (dwLastChangeItemAttrMin + dwChangeItemAttrCycle > dwNowMin)
-											{
-												ChatPacket(CHAT_TYPE_INFO, LC_TEXT("속성을 바꾼지 %d분 이내에는 다시 변경할 수 없습니다.(%d 분 남음)"),
-														dwChangeItemAttrCycle, dwChangeItemAttrCycle - (dwNowMin - dwLastChangeItemAttrMin));
-												return false;
-											}
-
-											pPC->SetFlag(msc_szLastChangeItemAttrFlag, dwNowMin);
-										}
 									}
 
 									if (item->GetSubType() == USE_CHANGE_ATTRIBUTE2)
