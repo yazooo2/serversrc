@@ -4422,6 +4422,12 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (item2->IsExchanging())
 								return false;
+							
+							if (item2->IsEquipped())
+							{
+								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas retirer les pierres d'un objet équipé.");
+								return false;
+							}
 	
 							if (item2->GetVnum() >= 28330 && item2->GetVnum() <= 28343) // ¿µ¼®+3
 							{
