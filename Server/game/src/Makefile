@@ -21,10 +21,11 @@ CFLAGS = -g -Wall -O2 -pipe -fexceptions -D_THREAD_SAFE -DNDEBUG -Wno-invalid-so
 # boost
 INCDIR += -I../../../Extern/include/boost
 
-# DevIL
-INCDIR += -I../../libdevil
-LIBDIR += -L../../libdevil
-LIBS += ../../libdevil/libIL.so
+# Miscellaneous external libraries
+INCDIR += -I../../../Extern/include
+LIBDIR += -L../../../Extern/lib
+
+
 
 # MySQL
 INCDIR += -I../../libmysql/7.x-5.1.35
@@ -32,10 +33,8 @@ LIBDIR += -L../../libmysql/7.x-5.1.35
 
 LIBS += /usr/local/lib/mysql/libmysqlclient.so -lz
 
-# Miscellaneous external libraries
-INCDIR += -I../../../Extern/include
-LIBDIR += -L../../../Extern/lib
 LIBS += -lcryptopp
+LIBS += -lpng -ljasper -ljpeg -ltiff -llzma -lIL
 
 # Project Library
 INCDIR += -I../../liblua/include

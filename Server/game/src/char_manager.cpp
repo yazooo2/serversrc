@@ -667,7 +667,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 			else
 			{
 				//for_each(v.begin(), v.end(), mem_fn(&CFSM::Update));
-				for_each(v.begin(), v.end(), bind(mem_fn(&CHARACTER::UpdateCharacter), placeholders::_1, iPulse));
+				for_each(v.begin(), v.end(), bind(&CHARACTER::UpdateCharacter, placeholders::_1, iPulse));
 			}
 		}
 
@@ -681,7 +681,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 			CHARACTER_VECTOR v;
 			v.reserve(m_set_pkChrState.size());
 			v.insert(v.end(), m_set_pkChrState.begin(), m_set_pkChrState.end());
-			for_each(v.begin(), v.end(), bind(mem_fn(&CHARACTER::UpdateStateMachine), placeholders::_1, iPulse));
+			for_each(v.begin(), v.end(), bind(&CHARACTER::UpdateStateMachine, placeholders::_1, iPulse));
 		}
 	}
 
@@ -692,7 +692,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		if (CHARACTER_MANAGER::instance().GetCharactersByRaceNum(xmas::MOB_SANTA_VNUM, i))
 		{
 			for_each(i.begin(), i.end(),
-					bind(mem_fn(&CHARACTER::UpdateStateMachine), placeholders::_1, iPulse));
+					bind(&CHARACTER::UpdateStateMachine, placeholders::_1, iPulse));
 		}
 	}
 

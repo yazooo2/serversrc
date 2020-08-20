@@ -15,4 +15,4 @@ $ cd Server
 $ gmake all
 ```
 
-Testé sous Freebsd 11.3 et FreeBSD 12.0 64bits
+Testé sous FreeBSD 12.0 64bits

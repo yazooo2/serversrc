@@ -9,3 +9,5 @@ liblualib.a
 libpoly.a
 libsql.a
 libthecore.a
+OBJDIR
+.obj
