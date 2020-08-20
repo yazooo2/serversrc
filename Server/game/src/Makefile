@@ -100,7 +100,7 @@ $(OBJDIR)/%.o: %.cpp
 
 limit_time:
 	@echo update limit time
-	@python update_limit_time.py
+	@python3.7 update_limit_time.py
 
 $(TARGET): $(CPPOBJS) $(COBJS) $(MAINOBJ)
 	@echo linking $(TARGET)....
