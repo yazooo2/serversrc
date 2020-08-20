@@ -1,5 +1,5 @@
 MAKE = gmake
-CC = c++
+CC = clang++
 
 INCDIR =
 LIBDIR =
@@ -13,7 +13,7 @@ $(shell if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi)
 
 TARGET = $(BINDIR)/db_r$(P4_VERSION)
 
-CFLAGS = -std=c++11 -g -Wall -O2 -pipe -fno-rtti -fno-exceptions -pthread -D_THREAD_SAFE  -Wno-invalid-source-encoding
+CFLAGS = -std=c++17 -g -Wall -O2 -pipe -fno-rtti -fno-exceptions -pthread -D_THREAD_SAFE  -Wno-invalid-source-encoding
 
 # boost
 INCDIR += -I../../boost
