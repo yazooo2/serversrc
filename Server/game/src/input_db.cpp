@@ -1672,7 +1672,7 @@ void CInputDB::ReloadProto(const char * c_pData)
 
 	CMotionManager::instance().Build();
 
-	CHARACTER_MANAGER::instance().for_each_pc(std::mem_fun(&CHARACTER::ComputePoints));
+	CHARACTER_MANAGER::instance().for_each_pc(std::mem_fn(&CHARACTER::ComputePoints));
 }
 
 void CInputDB::GuildSkillUsableChange(const char* c_pData)

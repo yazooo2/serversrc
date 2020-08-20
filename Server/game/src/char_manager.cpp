@@ -646,9 +646,6 @@ struct FuncUpdateAndResetChatCounter
 void CHARACTER_MANAGER::Update(int iPulse)
 {
 	using namespace std;
-#if defined(__GNUC__) && !defined(__clang__)
-	using namespace __gnu_cxx;
-#endif
 
 	BeginPendingDestroy();
 
@@ -659,11 +656,8 @@ void CHARACTER_MANAGER::Update(int iPulse)
 			// 컨테이너 복사
 			CHARACTER_VECTOR v;
 			v.reserve(m_map_pkPCChr.size());
-#if defined(__GNUC__) && !defined(__clang__)
-			transform(m_map_pkPCChr.begin(), m_map_pkPCChr.end(), back_inserter(v), select2nd<NAME_MAP::value_type>());
-#else
+
 			transform(m_map_pkPCChr.begin(), m_map_pkPCChr.end(), back_inserter(v), bind(&NAME_MAP::value_type::second, placeholders::_1));
-#endif
 
 			if (0 == (iPulse % PASSES_PER_SEC(5)))
 			{
@@ -672,12 +666,12 @@ void CHARACTER_MANAGER::Update(int iPulse)
 			}
 			else
 			{
-				//for_each(v.begin(), v.end(), mem_fun(&CFSM::Update));
-				for_each(v.begin(), v.end(), bind2nd(mem_fun(&CHARACTER::UpdateCharacter), iPulse));
+				//for_each(v.begin(), v.end(), mem_fn(&CFSM::Update));
+				for_each(v.begin(), v.end(), bind(mem_fn(&CHARACTER::UpdateCharacter), placeholders::_1, iPulse));
 			}
 		}
 
-//		for_each_pc(bind2nd(mem_fun(&CHARACTER::UpdateCharacter), iPulse));
+//		for_each_pc(bind(mem_fn(&CHARACTER::UpdateCharacter), iPulse));
 	}
 
 	// 몬스터 업데이트
@@ -686,12 +680,8 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		{
 			CHARACTER_VECTOR v;
 			v.reserve(m_set_pkChrState.size());
-#if defined(__GNUC__) && !defined(__clang__)
-			transform(m_set_pkChrState.begin(), m_set_pkChrState.end(), back_inserter(v), identity<CHARACTER_SET::value_type>());
-#else
 			v.insert(v.end(), m_set_pkChrState.begin(), m_set_pkChrState.end());
-#endif
-			for_each(v.begin(), v.end(), bind2nd(mem_fun(&CHARACTER::UpdateStateMachine), iPulse));
+			for_each(v.begin(), v.end(), bind(mem_fn(&CHARACTER::UpdateStateMachine), placeholders::_1, iPulse));
 		}
 	}
 
@@ -702,7 +692,7 @@ void CHARACTER_MANAGER::Update(int iPulse)
 		if (CHARACTER_MANAGER::instance().GetCharactersByRaceNum(xmas::MOB_SANTA_VNUM, i))
 		{
 			for_each(i.begin(), i.end(),
-					bind2nd(mem_fun(&CHARACTER::UpdateStateMachine), iPulse));
+					bind(mem_fn(&CHARACTER::UpdateStateMachine), placeholders::_1, iPulse));
 		}
 	}
 

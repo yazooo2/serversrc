@@ -56,3 +56,7 @@
 
 #define IN
 #define OUT
+
+// TODO remove this macro
+#define auto_ptr unique_ptr
+

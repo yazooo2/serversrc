@@ -40,6 +40,8 @@
 #include "BlueDragon.h"
 #include "DragonLair.h"
 
+#include <random>
+
 DWORD AdjustExpByLevel(const LPCHARACTER ch, const DWORD exp)
 {
 	if (PLAYER_EXP_TABLE_MAX < ch->GetLevel())
@@ -1055,8 +1057,11 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 				vec_bSlots.push_back(i);
 
 		if (!vec_bSlots.empty())
-		{
-			random_shuffle(vec_bSlots.begin(), vec_bSlots.end());
+		{			
+			// http://www.cplusplus.com/reference/algorithm/shuffle/
+			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+			shuffle (vec_bSlots.begin(), vec_bSlots.end(), std::default_random_engine(seed));
 
 			int iQty = MIN(vec_bSlots.size(), r.iInventoryQty);
 
@@ -1087,8 +1092,12 @@ void CHARACTER::ItemDropPenalty(LPCHARACTER pkKiller)
 				vec_bSlots.push_back(i);
 
 		if (!vec_bSlots.empty())
-		{
-			random_shuffle(vec_bSlots.begin(), vec_bSlots.end());
+		{		
+			// http://www.cplusplus.com/reference/algorithm/shuffle/
+			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+			shuffle (vec_bSlots.begin(), vec_bSlots.end(), std::default_random_engine(seed));
+			
 			int iQty;
 
 			if (isDropAllEquipments)

@@ -5,7 +5,7 @@ PLATFORM = $(shell file /bin/ls | cut -d' ' -f3 | cut -d'-' -f1)
 P4_VERSION = 40250
 
 C = clang
-CXX = c++
+CXX = clang++
 
 INCDIR =
 LIBDIR =
@@ -15,7 +15,7 @@ $(shell if [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi)
 
 # Standard Setting
 LIBS = -pthread -lm -lmd
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++17
 CFLAGS = -g -Wall -O2 -pipe -fexceptions -D_THREAD_SAFE -DNDEBUG -Wno-invalid-source-encoding
 
 # boost

@@ -265,7 +265,8 @@ public:
 	AlgorithmParametersBase(const char *name, bool throwIfNotUsed)
 		: m_name(name), m_throwIfNotUsed(throwIfNotUsed), m_used(false) {}
 
-	virtual ~AlgorithmParametersBase() throw(const char*)
+	// virtual ~AlgorithmParametersBase() throw(const char*)
+	virtual ~AlgorithmParametersBase() noexcept(false)
 	{
 #ifdef CRYPTOPP_UNCAUGHT_EXCEPTION_AVAILABLE
 		if (!std::uncaught_exception())

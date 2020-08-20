@@ -953,7 +953,7 @@ void CGuildManager::ChangeMaster(DWORD dwGID)
 	}
 
 	// 업데이트된 정보 보내주기
-	DBManager::instance().FuncQuery(std::bind1st(std::mem_fun(&CGuild::SendGuildDataUpdateToAllMember), iter->second), 
+	DBManager::instance().FuncQuery(std::bind(&CGuild::SendGuildDataUpdateToAllMember, iter->second, std::placeholders::_1), 
 			"SELECT 1");
 
 }
