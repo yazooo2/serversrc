@@ -850,7 +850,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 	protected:
 		void			ClearSync();
 
-		float			m_fSyncTime;
+		double			m_syncTime;
 		LPCHARACTER		m_pkChrSyncOwner;
 		CHARACTER_LIST	m_kLst_pkChrSyncOwned;	// 내가 SyncOwner인 자들
 

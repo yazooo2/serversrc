@@ -131,7 +131,7 @@ void CHARACTER::Initialize()
 
 	m_bOpeningSafebox = false;
 
-	m_fSyncTime = get_float_time()-3;
+	m_syncTime = get_double_time() - 3.0f;
 	m_dwPlayerID = 0;
 	m_dwKillerPID = 0;
 
@@ -2548,7 +2548,7 @@ bool CHARACTER::CanMove() const
 
 	// 0.2초 전이라면 움직일 수 없다.
 	/*
-	   if (get_float_time() - m_fSyncTime < 0.2f)
+	   if (get_double_time() - m_syncTime < 0.2f)
 	   return false;
 	 */
 	return true;
@@ -4154,7 +4154,7 @@ bool CHARACTER::SetSyncOwner(LPCHARACTER ch, bool bRemoveFromList)
 			sys_log(1, "SetSyncOwner set %s %p to %s", GetName(), this, ch->GetName());
 		}
 
-		m_fSyncTime = get_float_time();
+		m_syncTime = get_double_time();
 	}
 
 	// TODO: Sync Owner가 같더라도 계속 패킷을 보내고 있으므로,
@@ -4195,7 +4195,7 @@ bool CHARACTER::IsSyncOwner(LPCHARACTER ch) const
 
 	// 마지막으로 동기화 된 시간이 3초 이상 지났다면 소유권이 아무에게도
 	// 없다. 따라서 아무나 SyncOwner이므로 true 리턴
-	if (get_float_time() - m_fSyncTime >= 3.0f)
+	if (get_double_time() - m_syncTime >= 3.0f)
 		return true;
 
 	return false;

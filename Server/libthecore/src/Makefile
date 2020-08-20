@@ -1,9 +1,9 @@
-CC	= c++
+CC	= clang++
 BIN_DIR = ../lib
 BIN     = $(BIN_DIR)/libthecore.a
 INCLUDE = ../include
 
-CFLAGS  = -Wall -O2 -pipe -g -I$(INCLUDE)
+CFLAGS  = -Wall -O2 -pipe -g -I$(INCLUDE) -Wno-invalid-source-encoding
 
 LIBS    = 
 

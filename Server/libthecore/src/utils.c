@@ -338,7 +338,7 @@ int MAX(int a, int b)
 
 int MINMAX(int min, int value, int max)
 {
-    register int tv;
+    int tv;
 
     tv = (min > value ? min : value);
     return (max < tv) ? max : tv;
@@ -447,12 +447,12 @@ void core_dump_unix(const char *who, WORD line)
 
 #endif
 
-float get_float_time()
+double get_double_time()
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    tv.tv_sec -= 1057699978;
-    return ((float) tv.tv_sec + ((float) tv.tv_usec / 1000000.0f));
+    tv.tv_sec -= 1597942860;
+    return ((double) tv.tv_sec + ((double) tv.tv_usec / 1000000.0f));
 }
 
 static DWORD get_boot_sec()

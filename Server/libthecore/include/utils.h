@@ -57,7 +57,7 @@ extern "C"
     extern void		thecore_sleep(struct timeval * timeout);	// timeout만큼 프로세스 쉬기
     extern DWORD	thecore_random();				// 랜덤 함수
 
-    extern float	get_float_time();
+    extern double	get_double_time();
     extern DWORD	get_dword_time();
 
     extern char *	time_str(time_t ct);

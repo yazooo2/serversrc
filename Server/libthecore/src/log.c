@@ -114,7 +114,7 @@ void _sys_err(const char *func, int line, const char *format, ...)
 	char *time_s = asctime(localtime(&ct));
 
 	struct timeval tv;
-	int nMiliSec = 0;
+	// int nMiliSec = 0;
 	gettimeofday(&tv, NULL);
 
 
@@ -126,7 +126,7 @@ void _sys_err(const char *func, int line, const char *format, ...)
 		return;
 
 	time_s[strlen(time_s) - 1] = '\0';
-	len = snprintf(buf, 1024, "SYSERR: %-15.15s.%d :: %s: ", time_s + 4, tv.tv_usec,  func);
+	len = snprintf(buf, 1024, "SYSERR: %-15.15s.%ld :: %s: ", time_s + 4, tv.tv_usec,  func);
 	buf[1025] = '\0';
 
 	if (len < 1024)
@@ -197,7 +197,7 @@ void sys_log(unsigned int bit, const char *format, ...)
 	va_list	args;
 
 	struct timeval tv;
-	int nMiliSec = 0;
+	// int nMiliSec = 0;
 	gettimeofday(&tv, NULL);
 
 	if (bit != 0 && !(log_level_bits & bit))
@@ -208,10 +208,10 @@ void sys_log(unsigned int bit, const char *format, ...)
 		time_t ct = time(0);  
 		char *time_s = asctime(localtime(&ct));
 
-		fprintf(log_file_sys->fp, sys_log_header_string);
+		fprintf(log_file_sys->fp, "%s", sys_log_header_string);
 
 		time_s[strlen(time_s) - 1] = '\0';
-		fprintf(log_file_sys->fp, "%-15.15s.%d :: ", time_s + 4, tv.tv_usec );
+		fprintf(log_file_sys->fp, "%-15.15s.%ld :: ", time_s + 4, tv.tv_usec );
 
 		va_start(args, format);
 		vfprintf(log_file_sys->fp, format, args);
@@ -226,7 +226,7 @@ void sys_log(unsigned int bit, const char *format, ...)
 	if (log_level_bits > 1)
 	{
 #endif
-		fprintf(stdout, sys_log_header_string);
+		fprintf(stdout, "%s", sys_log_header_string);
 
 		va_start(args, format);
 		vfprintf(stdout, format, args);

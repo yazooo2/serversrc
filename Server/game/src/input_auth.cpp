@@ -49,17 +49,6 @@ CInputAuth::CInputAuth()
 
 void CInputAuth::Login(LPDESC d, const char * c_pData)
 {
-	extern bool Metin2Server_IsInvalid();
-
-#ifdef ENABLE_LIMIT_TIME
-	if (Metin2Server_IsInvalid())
-	{
-		extern void ClearAdminPages();
-		ClearAdminPages();
-		exit(1);
-		return;
-	}
-#endif
 	TPacketCGLogin3 * pinfo = (TPacketCGLogin3 *) c_pData;
 
 	if (!g_bAuthServer)
