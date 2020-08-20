@@ -644,13 +644,13 @@ void CWarMap::SendScorePacket(BYTE bIdx, LPDESC d)
 
 	p.header = HEADER_GC_GUILD;
 	p.subheader = GUILD_SUBHEADER_GC_WAR_SCORE;
-	p.size = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(long);
+	p.size = sizeof(p) + sizeof(DWORD) + sizeof(DWORD) + sizeof(int);
 
 	TEMP_BUFFER buf;
 	buf.write(&p, sizeof(p));
 	buf.write(&m_TeamData[bIdx].dwID, sizeof(DWORD));
 	buf.write(&m_TeamData[bIdx ? 0 : 1].dwID, sizeof(DWORD));
-	buf.write(&m_TeamData[bIdx].iScore, sizeof(long));
+	buf.write(&m_TeamData[bIdx].iScore, sizeof(int));
 
 	if (d)
 		d->Packet(buf.read_peek(), buf.size());
