@@ -1,11 +1,7 @@
-/*
- *    Filename: utils.c
- * Description: 각종 유틸리티
- *
- *      Author: 비엽 aka. Cronan
- */
 #define __LIBTHECORE__
 #include "stdafx.h"
+#include <chrono>
+#include <thread>
 
 static struct timeval null_time = { 0, 0 };
 
@@ -380,26 +376,17 @@ float fnumber(float from, float to)
 	return (((float)thecore_random() / (float)RAND_MAX) * (to - from)) + from;
 }
 
-#ifndef __WIN32__
 void thecore_sleep(struct timeval* timeout)
 {
-    if (select(0, (fd_set *) 0, (fd_set *) 0, (fd_set *) 0, timeout) < 0)
-    {
-	if (errno != EINTR)
-	{
-	    sys_err("select sleep %s", strerror(errno));
-	    return;
-	}
-    }
+	std::this_thread::sleep_for(std::chrono::milliseconds(timeout->tv_sec * 1000 + timeout->tv_usec / 1000));
 }
 
 void thecore_msleep(DWORD dwMillisecond)
 {
-    static struct timeval tv_sleep;
-    tv_sleep.tv_sec = dwMillisecond / 1000;
-    tv_sleep.tv_usec = dwMillisecond * 1000;
-    thecore_sleep(&tv_sleep);
+	std::this_thread::sleep_for(std::chrono::milliseconds(dwMillisecond));
 }
+
+#ifndef __WIN32__
 
 void core_dump_unix(const char *who, WORD line)
 {   
@@ -412,26 +399,7 @@ void core_dump_unix(const char *who, WORD line)
         abort();
 }
 
-/*
-uint64_t rdtsc()
-{
-	uint64_t x;
-	__asm__ volatile (".byte 0x0f, 0x31" : "=A" (x));
-	return x;
-}
-*/
-
 #else
-
-void thecore_sleep(struct timeval* timeout)
-{
-    Sleep(timeout->tv_sec * 1000 + timeout->tv_usec / 1000);
-}
-
-void thecore_msleep(DWORD dwMillisecond)
-{
-    Sleep(dwMillisecond);
-}
 
 void gettimeofday(struct timeval* t, struct timezone* dummy)
 {
@@ -447,29 +415,24 @@ void core_dump_unix(const char *who, WORD line)
 
 #endif
 
-double get_double_time()
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    tv.tv_sec -= 1597942860;
-    return ((double) tv.tv_sec + ((double) tv.tv_usec / 1000000.0f));
-}
-
 static DWORD get_boot_sec()
 {
-	static struct timeval tv_boot = {0L, 0L};
+	
+	static auto start_time = std::chrono::high_resolution_clock::now();
+	auto current_time = std::chrono::high_resolution_clock::now();
 
-	if (tv_boot.tv_sec == 0)
-		gettimeofday(&tv_boot, NULL);
-
-	return tv_boot.tv_sec;
+	
+	return std::chrono::duration_cast<std::chrono::milliseconds>(current_time - start_time).count();
 }
+
+
+double get_double_time()
+{
+	return get_boot_sec() / 1000.0;
+}
+
 
 DWORD get_dword_time()
 {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    //tv.tv_sec -= 1057699978;
-    tv.tv_sec -= get_boot_sec();
-    return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	return get_boot_sec();
 }
