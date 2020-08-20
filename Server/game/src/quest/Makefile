@@ -1,5 +1,5 @@
 CPP = c++
-CPPFLAGS=-g -std=c++11
+CPPFLAGS=-g -std=c++17
 INCLUDEDIR=../../../liblua/include
 LIBDIR=../../../liblua/lib
 LIBS=-llua -llualib
