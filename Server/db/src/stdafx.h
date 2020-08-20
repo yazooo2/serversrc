@@ -16,7 +16,4 @@
 #include "../../common/utils.h"
 #include "../../common/stl.h"
 #include "../../common/service.h"
-
-#define auto_ptr unique_ptr
-
 #endif

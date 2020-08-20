@@ -1,3 +1,6 @@
+#ifndef __INC_METiN_II_GAMESERV_STDAFX_H__
+#define __INC_METiN_II_GAMESERV_STDAFX_H__
+
 // Basic features
 // Enable or disable memory pooling for specific object types
 //#define M2_USE_POOL
@@ -57,6 +60,4 @@
 #define IN
 #define OUT
 
-// TODO remove this macro
-#define auto_ptr unique_ptr
-
+#endif

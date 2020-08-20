@@ -72,7 +72,7 @@ CGuild::CGuild(TGuildCreateParameter & cp)
 		m_data.grade_array[i].auth_flag = 0;
 	}
 
-	std::auto_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery(
+	std::unique_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery(
 				"INSERT INTO guild%s(name, master, sp, level, exp, skill_point, skill) "
 				"VALUES('%s', %u, 1000, 1, 0, 0, '\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0')", 
 				get_table_postfix(), m_data.name, m_data.master_pid));
@@ -1052,7 +1052,7 @@ void CGuild::RefreshCommentForce(DWORD player_id)
 		return;
 	}
 
-	std::auto_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery("SELECT id, name, content FROM guild_comment%s WHERE guild_id = %u ORDER BY notice DESC, id DESC LIMIT %d", get_table_postfix(), m_data.guild_id, GUILD_COMMENT_MAX_COUNT));
+	std::unique_ptr<SQLMsg> pmsg (DBManager::instance().DirectQuery("SELECT id, name, content FROM guild_comment%s WHERE guild_id = %u ORDER BY notice DESC, id DESC LIMIT %d", get_table_postfix(), m_data.guild_id, GUILD_COMMENT_MAX_COUNT));
 
 	TPacketGCGuild pack;
 	pack.header = HEADER_GC_GUILD;
@@ -2090,7 +2090,7 @@ CGuild::GuildJoinErrCode CGuild::VerifyGuildJoinableCondition( const LPCHARACTER
 	}
 	else if ( LC_IsBrazil() == true )
 	{
-		std::auto_ptr<SQLMsg> pMsg( DBManager::instance().DirectQuery("SELECT value FROM guild_invite_limit WHERE id=%d", GetID()) );
+		std::unique_ptr<SQLMsg> pMsg( DBManager::instance().DirectQuery("SELECT value FROM guild_invite_limit WHERE id=%d", GetID()) );
 
 		if ( pMsg->Get()->uiNumRows > 0 )
 		{
