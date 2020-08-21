@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 //
 // ImageLib Utility Sources
-// Copyright (C) 2000-2017 by Denton Woods
-// Last modified: 03/07/2009
+// Copyright (C) 2000-2008 by Denton Woods
+// Last modified: 08/23/2008
 //
 // Filename: IL/ilu.h
 //
@@ -10,10 +10,6 @@
 //
 //-----------------------------------------------------------------------------
 
-// Doxygen comment
-/*! \file ilu.h
-    The main include file for ILU
-*/
 
 #ifndef __ilu_h_
 #ifndef __ILU_H__
@@ -37,8 +33,8 @@ extern "C" {
 #endif
 
 
-#define ILU_VERSION_1_8_0 1
-#define ILU_VERSION       180
+#define ILU_VERSION_1_7_1 1
+#define ILU_VERSION       171
 
 
 #define ILU_FILTER         0x2600
@@ -73,17 +69,6 @@ extern "C" {
   
 #define ILU_VERSION_NUM IL_VERSION_NUM
 #define ILU_VENDOR      IL_VENDOR
-
-
-// Languages
-#define ILU_ENGLISH            0x0800
-#define ILU_ARABIC             0x0801
-#define ILU_DUTCH              0x0802
-#define ILU_JAPANESE           0x0803
-#define ILU_SPANISH            0x0804
-#define ILU_GERMAN             0x0805
-#define ILU_FRENCH             0x0806
-#define ILU_ITALIAN            0x0807
 
 
 // Filters
@@ -143,7 +128,7 @@ ILAPI ILuint         ILAPIENTRY iluColoursUsed(void);
 ILAPI ILboolean      ILAPIENTRY iluCompareImage(ILuint Comp);
 ILAPI ILboolean      ILAPIENTRY iluContrast(ILfloat Contrast);
 ILAPI ILboolean      ILAPIENTRY iluCrop(ILuint XOff, ILuint YOff, ILuint ZOff, ILuint Width, ILuint Height, ILuint Depth);
-ILAPI void           ILAPIENTRY iluDeleteImage(ILuint Id); // Deprecated
+ILAPI ILvoid         ILAPIENTRY iluDeleteImage(ILuint Id); // Deprecated
 ILAPI ILboolean      ILAPIENTRY iluEdgeDetectE(void);
 ILAPI ILboolean      ILAPIENTRY iluEdgeDetectP(void);
 ILAPI ILboolean      ILAPIENTRY iluEdgeDetectS(void);
@@ -151,26 +136,25 @@ ILAPI ILboolean      ILAPIENTRY iluEmboss(void);
 ILAPI ILboolean      ILAPIENTRY iluEnlargeCanvas(ILuint Width, ILuint Height, ILuint Depth);
 ILAPI ILboolean      ILAPIENTRY iluEnlargeImage(ILfloat XDim, ILfloat YDim, ILfloat ZDim);
 ILAPI ILboolean      ILAPIENTRY iluEqualize(void);
-ILAPI ILboolean      ILAPIENTRY iluEqualize2(void);
-ILAPI ILconst_string 		 ILAPIENTRY iluErrorString(ILenum Error);
+ILAPI ILstring 		 ILAPIENTRY iluErrorString(ILenum Error);
 ILAPI ILboolean      ILAPIENTRY iluConvolution(ILint *matrix, ILint scale, ILint bias);
 ILAPI ILboolean      ILAPIENTRY iluFlipImage(void);
 ILAPI ILboolean      ILAPIENTRY iluGammaCorrect(ILfloat Gamma);
 ILAPI ILuint         ILAPIENTRY iluGenImage(void); // Deprecated
-ILAPI void           ILAPIENTRY iluGetImageInfo(ILinfo *Info);
+ILAPI ILvoid         ILAPIENTRY iluGetImageInfo(ILinfo *Info);
 ILAPI ILint          ILAPIENTRY iluGetInteger(ILenum Mode);
-ILAPI void           ILAPIENTRY iluGetIntegerv(ILenum Mode, ILint *Param);
+ILAPI ILvoid         ILAPIENTRY iluGetIntegerv(ILenum Mode, ILint *Param);
 ILAPI ILstring 		 ILAPIENTRY iluGetString(ILenum StringName);
-ILAPI void           ILAPIENTRY iluImageParameter(ILenum PName, ILenum Param);
-ILAPI void           ILAPIENTRY iluInit(void);
+ILAPI ILvoid         ILAPIENTRY iluImageParameter(ILenum PName, ILenum Param);
+ILAPI ILvoid         ILAPIENTRY iluInit(void);
 ILAPI ILboolean      ILAPIENTRY iluInvertAlpha(void);
 ILAPI ILuint         ILAPIENTRY iluLoadImage(ILconst_string FileName);
 ILAPI ILboolean      ILAPIENTRY iluMirror(void);
 ILAPI ILboolean      ILAPIENTRY iluNegative(void);
 ILAPI ILboolean      ILAPIENTRY iluNoisify(ILclampf Tolerance);
 ILAPI ILboolean      ILAPIENTRY iluPixelize(ILuint PixSize);
-ILAPI void           ILAPIENTRY iluRegionfv(ILpointf *Points, ILuint n);
-ILAPI void           ILAPIENTRY iluRegioniv(ILpointi *Points, ILuint n);
+ILAPI ILvoid         ILAPIENTRY iluRegionfv(ILpointf *Points, ILuint n);
+ILAPI ILvoid         ILAPIENTRY iluRegioniv(ILpointi *Points, ILuint n);
 ILAPI ILboolean      ILAPIENTRY iluReplaceColour(ILubyte Red, ILubyte Green, ILubyte Blue, ILfloat Tolerance);
 ILAPI ILboolean      ILAPIENTRY iluRotate(ILfloat Angle);
 ILAPI ILboolean      ILAPIENTRY iluRotate3D(ILfloat x, ILfloat y, ILfloat z, ILfloat Angle);
@@ -179,8 +163,6 @@ ILAPI ILboolean      ILAPIENTRY iluSaturate4f(ILfloat r, ILfloat g, ILfloat b, I
 ILAPI ILboolean      ILAPIENTRY iluScale(ILuint Width, ILuint Height, ILuint Depth);
 ILAPI ILboolean      ILAPIENTRY iluScaleAlpha(ILfloat scale);
 ILAPI ILboolean      ILAPIENTRY iluScaleColours(ILfloat r, ILfloat g, ILfloat b);
-ILAPI ILboolean      ILAPIENTRY iluSepia(void);
-ILAPI ILboolean      ILAPIENTRY iluSetLanguage(ILenum Language);
 ILAPI ILboolean      ILAPIENTRY iluSharpen(ILfloat Factor, ILuint Iter);
 ILAPI ILboolean      ILAPIENTRY iluSwapColours(void);
 ILAPI ILboolean      ILAPIENTRY iluWave(ILfloat Angle);
