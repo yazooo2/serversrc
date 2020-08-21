@@ -378,7 +378,8 @@ float fnumber(float from, float to)
 
 void thecore_sleep(struct timeval* timeout)
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(timeout->tv_sec * 1000 + timeout->tv_usec / 1000));
+	auto duration = std::chrono::seconds{timeout->tv_sec} + std::chrono::microseconds{timeout->tv_usec};
+	std::this_thread::sleep_for(duration);
 }
 
 void thecore_msleep(DWORD dwMillisecond)
