@@ -6,7 +6,7 @@ Packages FreeBSD nécessaires pour la compilation :
 
 * gmake
 * makedepend
-* mysql58-server
+* mysql8-server
 
 ### Première compilation
 
