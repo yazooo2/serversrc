@@ -284,7 +284,7 @@ int CGuildManager::GetRank(CGuild* g)
 	return rank;
 }
 
-struct FGuildCompare : public std::binary_function<CGuild*, CGuild*, bool>
+struct FGuildCompare
 {
 	bool operator () (CGuild* g1, CGuild* g2) const
 	{

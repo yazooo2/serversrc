@@ -10,8 +10,8 @@
     LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 
-#if !defined(CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED)
-#define CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED
+#if !defined(BOOST_CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED)
+#define BOOST_CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED
 
 #include <boost/assert.hpp>
 
@@ -43,7 +43,7 @@
     }                                                                         \
     /**/
 
-#include <iostream>
+#include <iosfwd>
 
 ///////////////////////////////////////////////////////////////////////////////
 #define BOOST_WAVE_UPDATE_CURSOR()                                            \
@@ -181,7 +181,10 @@ uchar *fill(Scanner<Iterator> *s, uchar *cursor)
         {
             if (NULL == s->lim)
                 s->lim = s->top;
-            memmove(s->bot, s->tok, s->lim - s->tok);
+            size_t length = s->lim - s->tok;
+            if(length > 0){
+                memmove(s->bot, s->tok, length);
+            }
             s->tok = s->cur = s->bot;
             s->ptr -= cnt;
             cursor -= cnt;
@@ -202,7 +205,10 @@ uchar *fill(Scanner<Iterator> *s, uchar *cursor)
                 return cursor;
             }
 
-            memmove(buf, s->tok, s->lim - s->tok);
+            size_t length = s->lim - s->tok;
+            if(length > 0){
+                memmove(buf, s->tok, length);
+            }
             s->tok = s->cur = buf;
             s->ptr = &buf[s->ptr - s->bot];
             cursor = &buf[cursor - s->bot];
@@ -407,4 +413,4 @@ boost::wave::token_id scan(Scanner<Iterator> *s)
 #include BOOST_ABI_SUFFIX
 #endif
 
-#endif // !defined(CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED)
+#endif // !defined(BOOST_CPP_RE_HPP_B76C4F5E_63E9_4B8A_9975_EC32FA6BF027_INCLUDED)

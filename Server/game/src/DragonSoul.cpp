@@ -372,10 +372,10 @@ bool DSManager::ExtractDragonHeart(LPCHARACTER ch, LPITEM pItem, LPITEM pExtract
 	{
 		LPITEM pDH = ITEM_MANAGER::instance().CreateItem(DRAGON_HEART_VNUM);
 		
-		if (NULL == pDH)
+		if (nullptr == pDH)
 		{
 			sys_err ("Cannot create DRAGON_HEART(%d).", DRAGON_HEART_VNUM);
-			return NULL;
+			return false;
 		}
 
 		pItem->SetCount(pItem->GetCount() - 1);

@@ -3808,7 +3808,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									
 									if (item2->IsEquipped())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet ?uip?");
 										return false;
 									}
 									
@@ -3863,7 +3863,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									
 									if (item2->IsEquipped())
 									{
-										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+										ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet ?uip?");
 										return false;
 									}
 
@@ -4425,7 +4425,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							
 							if (item2->IsEquipped())
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas retirer les pierres d'un objet équipé.");
+								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas retirer les pierres d'un objet ?uip?");
 								return false;
 							}
 	
@@ -4470,7 +4470,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 							if (item2->IsEquipped())
 							{
-								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet équipé.");
+								ChatPacket(CHAT_TYPE_INFO, "Vous ne pouvez pas modifier un objet ?uip?");
 								return false;
 							}
 
@@ -5249,7 +5249,7 @@ bool CHARACTER::UseItem(TItemPos Cell, TItemPos DestCell)
 	}
 
 	//º¸µû¸® ºñ´Ü »ç¿ë½Ã °Å·¡Ã¢ Á¦ÇÑ Ã¼Å© 
-	if (item->GetVnum() == 50200 | item->GetVnum() == 71049)
+	if (item->GetVnum() == 50200 || item->GetVnum() == 71049)
 	{
 		if (GetExchange() || GetMyShop() || GetShopOwner() || IsOpenSafebox() || IsCubeOpen())
 		{

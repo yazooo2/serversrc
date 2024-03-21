@@ -123,8 +123,14 @@ struct basic_pipebuf : std::basic_streambuf<CharT, Traits>
     ///Destructor -> writes the frest of the data
     ~basic_pipebuf()
     {
-        if (is_open())
-            overflow(Traits::eof());
+        try 
+        {
+            if (basic_pipebuf::is_open())
+                basic_pipebuf::overflow(Traits::eof());
+        }
+        catch (process_error & )
+        {
+        }
     }
 
     ///Move construct from a pipe.
@@ -167,10 +173,12 @@ struct basic_pipebuf : std::basic_streambuf<CharT, Traits>
             if (this->pptr() == this->epptr())
             {
                 bool wr = this->_write_impl();
-                *this->pptr() = ch;
-                this->pbump(1);
                 if (wr)
+                {
+                    *this->pptr() = ch;
+                    this->pbump(1);
                     return ch;
+                }
             }
             else
             {
@@ -277,7 +285,7 @@ private:
         else if (wrt == 0) //broken pipe
             return false;
 
-        this->pbump(-wrt);
+        this->pbump(static_cast<int>(-wrt));
 
         return true;
     }

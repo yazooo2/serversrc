@@ -308,8 +308,9 @@ detect_ssl(
         bool result                 // The result of the detector
     );
     @endcode
-    Regardless of whether the asynchronous operation completes
-    immediately or not, the handler will not be invoked from within
+    If the handler has an associated immediate executor,
+    an immediate completion will be dispatched to it.
+    Otherwise, the handler will not be invoked from within
     this function. Invocation of the handler will be performed in a
     manner equivalent to using `net::post`.
 */
@@ -319,19 +320,12 @@ template<
     class CompletionToken =
         net::default_completion_token_t<beast::executor_type<AsyncReadStream>>
 >
-#if BOOST_BEAST_DOXYGEN
-BOOST_ASIO_INITFN_RESULT_TYPE(CompletionToken, void(error_code, bool))
-#else
-auto
-#endif
+BOOST_ASIO_INITFN_AUTO_RESULT_TYPE(CompletionToken, void(error_code, bool))
 async_detect_ssl(
     AsyncReadStream& stream,
     DynamicBuffer& buffer,
     CompletionToken&& token = net::default_completion_token_t<
-            beast::executor_type<AsyncReadStream>>{}) ->
-        typename net::async_result<
-            typename std::decay<CompletionToken>::type, /*< `async_result` customizes the return value based on the completion token >*/
-            void(error_code, bool)>::return_type; /*< This is the signature for the completion handler >*/
+            beast::executor_type<AsyncReadStream>>{});
 //]
 
 //[example_core_detect_ssl_5
@@ -374,13 +368,13 @@ struct run_detect_ssl_op
     void operator()(
         DetectHandler&& h,
         AsyncReadStream* s, // references are passed as pointers
-        DynamicBuffer& b)
+        DynamicBuffer* b)
     {
         detect_ssl_op<
             typename std::decay<DetectHandler>::type,
             AsyncReadStream,
             DynamicBuffer>(
-                std::forward<DetectHandler>(h), *s, b);
+                std::forward<DetectHandler>(h), *s, *b);
     }
 };
 
@@ -395,18 +389,11 @@ template<
     class AsyncReadStream,
     class DynamicBuffer,
     class CompletionToken>
-#if BOOST_BEAST_DOXYGEN
-BOOST_ASIO_INITFN_RESULT_TYPE(CompletionToken, void(error_code, bool))
-#else
-auto
-#endif
+BOOST_ASIO_INITFN_AUTO_RESULT_TYPE(CompletionToken, void(error_code, bool))
 async_detect_ssl(
     AsyncReadStream& stream,
     DynamicBuffer& buffer,
     CompletionToken&& token)
-        -> typename net::async_result<
-            typename std::decay<CompletionToken>::type,
-            void(error_code, bool)>::return_type
 {
     // Make sure arguments meet the type requirements
 
@@ -439,7 +426,7 @@ async_detect_ssl(
             detail::run_detect_ssl_op{},
             token,
             &stream, // pass the reference by pointer
-            buffer);
+            &buffer);
 }
 
 //]
@@ -591,8 +578,19 @@ operator()(error_code ec, std::size_t bytes_transferred, bool cont)
             // by the move, are first moved to the stack before calling the
             // initiating function.
 
-            yield stream_.async_read_some(buffer_.prepare(
-                read_size(buffer_, 1536)), std::move(*this));
+            yield
+            {
+                // This macro facilitates asynchrnous handler tracking and
+                // debugging when the preprocessor macro
+                // BOOST_ASIO_CUSTOM_HANDLER_TRACKING is defined.
+
+                BOOST_ASIO_HANDLER_LOCATION((
+                    __FILE__, __LINE__,
+                    "async_detect_ssl"));
+
+                stream_.async_read_some(buffer_.prepare(
+                    read_size(buffer_, 1536)), std::move(*this));
+            }
 
             // Commit what we read into the buffer's input area.
             buffer_.commit(bytes_transferred);
@@ -626,10 +624,17 @@ operator()(error_code ec, std::size_t bytes_transferred, bool cont)
             // used in the call to async_read_some above, to avoid
             // instantiating another version of the function template.
 
-            yield stream_.async_read_some(buffer_.prepare(0), std::move(*this));
+            yield
+            {
+                BOOST_ASIO_HANDLER_LOCATION((
+                    __FILE__, __LINE__,
+                    "async_detect_ssl"));
+
+                stream_.async_read_some(buffer_.prepare(0), std::move(*this));
+            }
 
             // Restore the saved error code
-            ec = ec_;
+            BOOST_BEAST_ASSIGN_EC(ec, ec_);
         }
 
         // Invoke the final handler.

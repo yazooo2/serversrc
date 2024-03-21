@@ -5,7 +5,7 @@
 
 /** \file boost/process/async.hpp
 
-The header which provides the basic asynchrounous features.
+The header which provides the basic asynchronous features.
 It provides the on_exit property, which allows callbacks when the process exits.
 It also implements the necessary traits for passing an boost::asio::io_context,
 which is needed for asynchronous communication.
@@ -109,10 +109,10 @@ with `function` being a callable object with the signature `(int, const std::err
 \code{.cpp}
 io_context ios;
 
-child c("ls", on_exit=[](int exit, const std::error_code& ec_in){});
+child c("ls", ios, on_exit=[](int exit, const std::error_code& ec_in){});
 
 std::future<int> exit_code;
-chlid c2("ls", on_exit=exit_code);
+chlid c2("ls", ios, on_exit=exit_code);
 
 \endcode
 

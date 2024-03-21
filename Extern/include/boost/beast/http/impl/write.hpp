@@ -18,7 +18,7 @@
 #include <boost/beast/core/stream_traits.hpp>
 #include <boost/beast/core/detail/is_invocable.hpp>
 #include <boost/asio/coroutine.hpp>
-#include <boost/asio/post.hpp>
+#include <boost/asio/dispatch.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/optional.hpp>
 #include <boost/throw_exception.hpp>
@@ -60,6 +60,10 @@ class write_some_op
             error_code& ec,
             ConstBufferSequence const& buffers)
         {
+            BOOST_ASIO_HANDLER_LOCATION((
+                __FILE__, __LINE__,
+                "http::async_write_some"));
+
             invoked = true;
             ec = {};
             op_.s_.async_write_some(
@@ -93,8 +97,14 @@ public:
             if(ec)
             {
                 BOOST_ASSERT(! f.invoked);
-                return net::post(
-                    s_.get_executor(),
+
+                BOOST_ASIO_HANDLER_LOCATION((
+                    __FILE__, __LINE__,
+                    "http::async_write_some"));
+
+                auto ex = asio::get_associated_immediate_executor(*this, s_.get_executor());
+                return net::dispatch(
+                    ex,
                     beast::bind_front_handler(
                         std::move(*this), ec, 0));
             }
@@ -107,8 +117,13 @@ public:
             BOOST_ASSERT(sr_.is_done());
         }
 
-        return net::post(
-            s_.get_executor(),
+        BOOST_ASIO_HANDLER_LOCATION((
+            __FILE__, __LINE__,
+            "http::async_write_some"));
+
+        const auto ex = this->get_immediate_executor();
+        return net::dispatch(
+            ex,
             beast::bind_front_handler(
                 std::move(*this), ec, 0));
     }
@@ -165,8 +180,18 @@ class write_op
     Stream& s_;
     serializer<isRequest, Body, Fields>& sr_;
     std::size_t bytes_transferred_ = 0;
+    net::cancellation_state st_{this->
+        beast::async_base<Handler, beast::executor_type<Stream>>
+            ::get_cancellation_slot()};
 
 public:
+    using cancellation_slot_type = net::cancellation_slot;
+    cancellation_slot_type get_cancellation_slot() const noexcept
+    {
+        return st_.slot();
+    }
+
+
     template<class Handler_>
     write_op(
         Handler_&& h,
@@ -191,17 +216,34 @@ public:
             if(Predicate{}(sr_))
             {
                 BOOST_ASIO_CORO_YIELD
-                net::post(
-                    s_.get_executor(),
-                    std::move(*this));
+                {
+                    BOOST_ASIO_HANDLER_LOCATION((
+                        __FILE__, __LINE__,
+                        "http::async_write"));
+
+                    const auto ex = this->get_immediate_executor();
+                    net::dispatch(
+                        ex,
+                        std::move(*this));
+                }
                 goto upcall;
             }
             for(;;)
             {
                 BOOST_ASIO_CORO_YIELD
-                beast::http::async_write_some(
-                    s_, sr_, std::move(*this));
+                {
+                    BOOST_ASIO_HANDLER_LOCATION((
+                        __FILE__, __LINE__,
+                        "http::async_write"));
+
+                    beast::http::async_write_some(
+                        s_, sr_, std::move(*this));
+                }
                 bytes_transferred_ += bytes_transferred;
+                if (!ec && st_.cancelled() != net::cancellation_type::none)
+                {
+                    BOOST_BEAST_ASSIGN_EC(ec, net::error::operation_aborted);
+                }
                 if(ec)
                     goto upcall;
                 if(Predicate{}(sr_))
@@ -248,6 +290,10 @@ public:
     void
     operator()()
     {
+        BOOST_ASIO_HANDLER_LOCATION((
+            __FILE__, __LINE__,
+            "http::async_write(msg)"));
+
         async_write(s_, sr_, std::move(*this));
     }
 
@@ -463,7 +509,7 @@ write_some_impl(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write_some_impl(
     AsyncWriteStream& stream,
@@ -526,7 +572,7 @@ write_some(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write_some(
     AsyncWriteStream& stream,
@@ -608,7 +654,7 @@ write_header(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write_header(
     AsyncWriteStream& stream,
@@ -681,7 +727,7 @@ write(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write(
     AsyncWriteStream& stream,
@@ -801,7 +847,7 @@ write(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write(
     AsyncWriteStream& stream,
@@ -830,7 +876,7 @@ async_write(
 template<
     class AsyncWriteStream,
     bool isRequest, class Body, class Fields,
-    class WriteHandler>
+    BOOST_BEAST_ASYNC_TPARAM2 WriteHandler>
 BOOST_BEAST_ASYNC_RESULT2(WriteHandler)
 async_write(
     AsyncWriteStream& stream,
